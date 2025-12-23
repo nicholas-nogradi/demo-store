@@ -81,7 +81,7 @@ export function ProductDetail({ product, isOpen, onClose, onAddToCart }: Product
 
             {/* Features */}
             <div className="mb-6">
-              <h3 className="text-gray-900 mb-3">What's included:</h3>
+              <h3 className="text-gray-900 mb-3">What&apos;s included:</h3>
               <ul className="space-y-2">
                 {features.map((feature, index) => (
                   <li key={index} className="flex items-start gap-2 text-gray-600">
