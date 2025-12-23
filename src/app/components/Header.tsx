@@ -88,7 +88,7 @@ export function Header({
 
             <Button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              variant="ghost"
+              variant="default"
               size="icon"
               className="md:hidden"
               aria-label="Menu"
