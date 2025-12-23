@@ -1,0 +1,210 @@
+# Storybook Stories Documentation
+
+This document provides an overview of all the Storybook stories created for the Chromatic Demo Store application.
+
+## Getting Started
+
+To run Storybook:
+
+```bash
+npm run storybook
+```
+
+Storybook will open at `http://localhost:6006`
+
+## Stories Structure
+
+Stories are organized in the following categories:
+
+### UI Components (`src/stories/`)
+
+Basic reusable UI building blocks from the component library:
+
+#### Button (`Button.stories.tsx`)
+- **Default**: Standard primary button
+- **Destructive**: Red button for destructive actions
+- **Outline**: Bordered button style
+- **Secondary**: Secondary action button
+- **Ghost**: Subtle button style
+- **Link**: Text-only link button
+- **Small**: Small size variant
+- **Large**: Large size variant
+- **Icon**: Icon-only button
+- **Disabled**: Disabled state
+
+#### Badge (`Badge.stories.tsx`)
+- **Default**: Default badge style
+- **Secondary**: Secondary badge
+- **Destructive**: Red/danger badge
+- **Outline**: Outlined badge
+- **Featured**: Featured product badge (orange)
+- **Multiple**: Multiple badges in a row
+
+#### Input (`Input.stories.tsx`)
+- **Default**: Standard text input
+- **Email**: Email input type
+- **Password**: Password input type
+- **Number**: Number input type
+- **Search**: Search input type
+- **Disabled**: Disabled state
+- **WithValue**: Pre-filled input
+
+#### Card (`Card.stories.tsx`)
+- **Default**: Complete card with header, content, and footer
+- **Simple**: Card with only content
+- **HeaderOnly**: Card with header only
+- **WithFooter**: Card with footer actions
+
+#### Separator (`Separator.stories.tsx`)
+- **Default**: Basic horizontal separator
+- **Horizontal**: Multiple horizontal separators
+- **Vertical**: Vertical separator
+- **WithMargin**: Custom margin example
+
+#### Dialog (`Dialog.stories.tsx`)
+- **Default**: Full-featured dialog with header and footer
+- **Simple**: Minimal dialog
+- **LongContent**: Dialog with scrollable content
+
+### Main Components (`src/stories/`)
+
+Feature components that make up the application:
+
+#### Header (`Header.stories.tsx`)
+- **Default**: Empty header
+- **WithCartItems**: Header with 2 items in cart
+- **CategorySelected**: Header with a selected category filter
+- **CartOpen**: Header with open cart sidebar
+
+#### Footer (`Footer.stories.tsx`)
+- **Default**: Footer component
+- **DarkBackground**: Footer on dark background
+
+#### Hero (`Hero.stories.tsx`)
+- **Default**: Full hero section
+- **Mobile**: Hero on mobile viewport
+- **Tablet**: Hero on tablet viewport
+
+#### ProductCard (`ProductCard.stories.tsx`)
+- **Default**: Standard product card
+- **Featured**: Product marked as featured
+- **OutOfStock**: Out of stock product
+- **NoRating**: Product without ratings
+- **HighRating**: Product with 5-star rating
+
+#### ProductGrid (`ProductGrid.stories.tsx`)
+- **Default**: Grid with 4 products
+- **SingleProduct**: Grid with one product
+- **Empty**: Empty grid (no products)
+- **ManyProducts**: Grid with 12 products
+
+#### ProductDetail (`ProductDetail.stories.tsx`)
+- **Default**: Open product detail modal
+- **OutOfStock**: Out of stock product modal
+- **NoRating**: Product without rating modal
+- **Closed**: Closed product detail modal
+
+#### ShoppingCart (`ShoppingCart.stories.tsx`)
+- **Empty**: Empty shopping cart
+- **WithItems**: Cart with 2 items
+- **SingleItem**: Cart with 1 item
+- **Closed**: Closed cart sidebar
+
+## Best Practices Used
+
+### 1. **Consistent Organization**
+- Stories grouped by component type (UI vs. Main Components)
+- Clear naming conventions for story files
+
+### 2. **Comprehensive Coverage**
+- Each component has multiple stories covering:
+  - Default/normal state
+  - Variant states (for applicable components)
+  - Edge cases (empty, disabled, loading, etc.)
+  - Different viewport sizes (mobile, tablet, desktop)
+
+### 3. **Props Documentation**
+- All stories include `argTypes` for interactive prop control
+- Clear descriptions of what each story demonstrates
+
+### 4. **Mock Data**
+- Realistic mock data that represents actual usage
+- Multiple product examples with varied states
+
+### 5. **Accessibility**
+- `@storybook/addon-a11y` enabled for accessibility testing
+- Proper ARIA labels in interactive components
+- Semantic HTML structure maintained
+
+### 6. **Auto Documentation**
+- `tags: ['autodocs']` enables automatic documentation generation
+- Stories serve as living documentation
+- Props automatically documented from TypeScript types
+
+### 7. **Interaction Testing**
+- Action loggers in callback props
+- Stories demonstrate proper prop handling
+- Interactive state management in stories
+
+## Running Tests
+
+Storybook integrates with Vitest for component testing:
+
+```bash
+npm run test:storybook
+```
+
+## Chromatic Integration
+
+Stories are set up for [Chromatic](https://chromatic.com) visual regression testing:
+
+```bash
+npx chromatic
+```
+
+## Adding New Stories
+
+When creating new components, follow this template:
+
+```tsx
+import type { Meta, StoryObj } from '@storybook/react';
+import { MyComponent } from '../app/components/MyComponent';
+
+const meta = {
+  title: 'Components/MyComponent',
+  component: MyComponent,
+  parameters: {
+    layout: 'centered', // or 'fullscreen', 'padded'
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    // Define your prop controls here
+    variant: {
+      control: 'select',
+      options: ['default', 'secondary'],
+    },
+  },
+} satisfies Meta<typeof MyComponent>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    // Default props
+  },
+};
+
+export const Variant: Story = {
+  args: {
+    // Alternative props
+  },
+};
+```
+
+## Resources
+
+- [Storybook Documentation](https://storybook.js.org/)
+- [React Storybook Guide](https://storybook.js.org/docs/react/get-started/introduction)
+- [Chromatic Documentation](https://www.chromatic.com/docs/)
+- [Component Testing Best Practices](https://storybook.js.org/docs/react/writing-tests/component-testing)
