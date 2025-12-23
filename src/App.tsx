@@ -1,139 +1,127 @@
-import { useState, useMemo, useCallback } from 'react';
-import { Header } from '@/app/components/Header';
-import { Hero } from '@/app/components/Hero';
-import { ProductGrid } from '@/app/components/ProductGrid';
-import { ShoppingCart } from '@/app/components/ShoppingCart';
-import { ProductDetail } from '@/app/components/ProductDetail';
-import { Footer } from '@/app/components/Footer';
-import { products } from '../data/products';
-import type { CartState, Product, ProductCategory, FilterState } from '@/types';
-import { toast, Toaster } from 'sonner';
+import { useState, useMemo, useCallback } from 'react'
+import { Header } from '@/app/components/Header'
+import { Hero } from '@/app/components/Hero'
+import { ProductGrid } from '@/app/components/ProductGrid'
+import { ShoppingCart } from '@/app/components/ShoppingCart'
+import { ProductDetail } from '@/app/components/ProductDetail'
+import { Footer } from '@/app/components/Footer'
+import { products } from './data/products'
+import type { CartState, Product, ProductCategory, FilterState } from '@/types'
+import { Toaster } from 'sonner'
 
 export default function App() {
   const [cart, setCart] = useState<CartState>({
     items: [],
     isOpen: false,
-  });
+  })
 
   const [filters, setFilters] = useState<FilterState>({
     category: 'all',
     searchQuery: '',
     sortBy: 'featured',
-  });
+  })
 
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
-    let filtered = [...products];
+    let filtered = [...products]
 
     // Filter by category
     if (filters.category !== 'all') {
-      filtered = filtered.filter(p => p.category === filters.category);
+      filtered = filtered.filter(p => p.category === filters.category)
     }
 
     // Filter by search query
     if (filters.searchQuery.trim()) {
-      const query = filters.searchQuery.toLowerCase();
-      filtered = filtered.filter(p => 
+      const query = filters.searchQuery.toLowerCase()
+      filtered = filtered.filter(p =>
         p.name.toLowerCase().includes(query) ||
         p.description.toLowerCase().includes(query) ||
-        p.category.toLowerCase().includes(query)
-      );
+        p.category.toLowerCase().includes(query),
+      )
     }
 
     // Sort products
     filtered.sort((a, b) => {
       switch (filters.sortBy) {
         case 'price-asc':
-          return a.price - b.price;
+          return a.price - b.price
         case 'price-desc':
-          return b.price - a.price;
+          return b.price - a.price
         case 'name':
-          return a.name.localeCompare(b.name);
+          return a.name.localeCompare(b.name)
         case 'featured':
         default:
-          if (a.featured && !b.featured) return -1;
-          if (!a.featured && b.featured) return 1;
-          return 0;
+          if (a.featured && !b.featured) return -1
+          if (!a.featured && b.featured) return 1
+          return 0
       }
-    });
+    })
 
-    return filtered;
-  }, [filters]);
+    return filtered
+  }, [filters])
 
   // Cart operations
   const handleAddToCart = useCallback((product: Product) => {
     setCart(prev => {
-      const existingItem = prev.items.find(item => item.product.id === product.id);
+      const existingItem = prev.items.find(item => item.product.id === product.id)
 
       if (existingItem) {
-        toast.success(`Added another ${product.name} to cart`);
         return {
           ...prev,
           items: prev.items.map(item =>
             item.product.id === product.id
               ? { ...item, quantity: item.quantity + 1 }
-              : item
+              : item,
           ),
-        };
+        }
       }
 
-      toast.success(`${product.name} added to cart`);
       return {
         ...prev,
         items: [...prev.items, { product, quantity: 1 }],
-      };
-    });
-  }, []);
-
- 
+      }
+    })
+  }, [])
 
   const handleRemoveItem = useCallback((productId: string) => {
-    setCart(prev => {
-      const item = prev.items.find(i => i.product.id === productId);
-      if (item) {
-        toast.info(`${item.product.name} removed from cart`);
-      }
-      return {
-        ...prev,
-        items: prev.items.filter(item => item.product.id !== productId),
-      };
-    });
-  }, []);
+    setCart(prev => ({
+      ...prev,
+      items: prev.items.filter(item => item.product.id !== productId),
+    }))
+  }, [])
 
-   const handleUpdateQuantity = useCallback((productId: string, quantity: number) => {
+  const handleUpdateQuantity = useCallback((productId: string, quantity: number) => {
     if (quantity < 1) {
-      handleRemoveItem(productId);
-      return;
+      handleRemoveItem(productId)
+      return
     }
 
     setCart(prev => ({
       ...prev,
       items: prev.items.map(item =>
-        item.product.id === productId
-          ? { ...item, quantity }
-          : item
+        item.product.id === productId ? { ...item, quantity } : item,
       ),
-    }));
-  }, []);
+    }))
+  }, [handleRemoveItem])
 
   const handleCartToggle = useCallback(() => {
-    setCart(prev => ({ ...prev, isOpen: !prev.isOpen }));
-  }, []);
+    setCart(prev => ({ ...prev, isOpen: !prev.isOpen }))
+  }, [])
 
   // Filter operations
   const handleCategoryChange = useCallback((category: ProductCategory | 'all') => {
-    setFilters(prev => ({ ...prev, category }));
-  }, []);
+    setFilters(prev => ({ ...prev, category }))
+  }, [])
 
   const handleSearchChange = useCallback((searchQuery: string) => {
-    setFilters(prev => ({ ...prev, searchQuery }));
-  }, []);
+    setFilters(prev => ({ ...prev, searchQuery }))
+  }, [])
 
   const handleShopNow = useCallback(() => {
-    window.scrollTo({ top: 600, behavior: 'smooth' });
-  }, []);
+    window.scrollTo({ top: 600, behavior: 'smooth' })
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -154,23 +142,27 @@ export default function App() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-3xl text-gray-900 mb-2">
-                {filters.category === 'all' ? 'All Products' : 
-                  filters.category.split('-').map(word => 
-                    word.charAt(0).toUpperCase() + word.slice(1)
-                  ).join(' ')
-                }
+                {filters.category === 'all'
+                  ? 'All Products'
+                  : filters.category
+                      .split('-')
+                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                      .join(' ')}
               </h2>
               <p className="text-gray-600">
-                {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'} found
+                {filteredProducts.length}{' '}
+                {filteredProducts.length === 1 ? 'product' : 'products'} found
               </p>
             </div>
 
             <select
               value={filters.sortBy}
-              onChange={(e) => setFilters(prev => ({ 
-                ...prev, 
-                sortBy: e.target.value as FilterState['sortBy']
-              }))}
+              onChange={e =>
+                setFilters(prev => ({
+                  ...prev,
+                  sortBy: e.target.value as FilterState['sortBy'],
+                }))
+              }
               className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
             >
               <option value="featured">Featured</option>
@@ -205,5 +197,5 @@ export default function App() {
         onAddToCart={handleAddToCart}
       />
     </div>
-  );
+  )
 }
