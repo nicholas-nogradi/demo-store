@@ -41,6 +41,7 @@ export default function App() {
         p.category.toLowerCase().includes(query),
       )
     }
+    
 
     // Sort products
     filtered.sort((a, b) => {
