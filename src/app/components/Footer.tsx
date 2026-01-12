@@ -19,7 +19,7 @@ export function Footer() {
             </div>
             <p className="text-gray-400 mb-4 max-w-md">
               Your one-stop shop for visual testing tools, component libraries, and development resources. 
-              Build better UIs with Chromatic.
+              Build better UIs with Chromatic. This is a demo store. No products are actually sold. Built for demos and testing purposes only.
             </p>
             <div className="flex gap-2">
               <Button 
